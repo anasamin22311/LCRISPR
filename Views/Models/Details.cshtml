@@ -3,52 +3,53 @@
 @{
     ViewData["Title"] = "Details";
 }
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<h1 class="details-header">Details</h1>
 
-<h1>Details</h1>
-
-<div>
+<div class="details-section">
     <h4>Model</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Tilte)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-7">
             @Html.DisplayFor(model => model.Tilte)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.SubTilte)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-7">
             @Html.DisplayFor(model => model.SubTilte)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-7">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.RepositoryURL)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-7">
             @Html.DisplayFor(model => model.RepositoryURL)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Licenses)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-7">
             @Html.DisplayFor(model => model.Licenses)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Accuracy)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-7">
             @Html.DisplayFor(model => model.Accuracy)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="button-container">
+        <a asp-action="Edit" asp-route-id="@Model?.id" class="btn btn-primary edit-link">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary back-link">Back to List</a>
+        <a asp-action="Delete" class="btn btn-danger back-link">Delete</a>
+    </div>
 </div>

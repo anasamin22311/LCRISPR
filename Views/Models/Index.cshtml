@@ -4,62 +4,32 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 style="text-align:center">Models</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Tilte)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubTilte)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RepositoryURL)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Licenses)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accuracy)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tilte)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubTilte)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RepositoryURL)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Licenses)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Accuracy)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
-            </td>
-        </tr>
+
+@foreach (var item in Model)
+{
+    <div class="card">
+        <a style="text-decoration: auto" href="@Url.Action("Details", new { id = item.id })" tabindex="0">
+            <div class="card-content">
+                <div title="@item.Tilte" class="card-title">@Html.DisplayFor(modelItem => item.Tilte)</div>
+                <span title="@item.SubTilte" class="card-subtitle">@Html.DisplayFor(modelItem => item.SubTilte)</span>
+                <span title="@item.Description" class="card-description">@Html.DisplayFor(modelItem => item.Description)</span>
+            </div>
+        </a>
+        <div class="card-bottom">
+            <div class="card-info">
+                <span class="card-license">@Html.DisplayFor(modelItem => item.Licenses)</span>
+                <span class="card-accuracy">Accuracy: @Html.DisplayFor(modelItem => item.Accuracy)</span>
+            </div>
+            <a href="@item.RepositoryURL" class="card-link" target="_blank">Repository</a>
+        </div>
+        @*<div class="card-buttons">
+            <a asp-action="Edit" asp-route-id="@item.id" class="btn-edit btn btn-sm card-buttons-btn">Edit</a>
+            <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-sm card-buttons-btn">Delete</a>
+        </div>*@
+    </div>
 }
-    </tbody>
-</table>
