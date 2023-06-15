@@ -4,19 +4,16 @@ using CRISPR.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CRISPR.Data.Migrations
+namespace CRISPR.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230606192015_init2")]
-    partial class init2
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,11 +79,11 @@ namespace CRISPR.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubTilte")
+                    b.Property<string>("SubTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Tilte")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -113,6 +110,9 @@ namespace CRISPR.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileURL")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Licenses")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -121,11 +121,11 @@ namespace CRISPR.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubTilte")
+                    b.Property<string>("SubTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Tilte")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -133,7 +133,7 @@ namespace CRISPR.Data.Migrations
 
                     b.HasIndex("DataSetId");
 
-                    b.ToTable("Code", (string)null);
+                    b.ToTable("Model", (string)null);
                 });
 
             modelBuilder.Entity("CRISPR.Models.Prop", b =>
@@ -144,7 +144,7 @@ namespace CRISPR.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ModelId")
+                    b.Property<int?>("ModelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -170,7 +170,7 @@ namespace CRISPR.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DataSetId")
+                    b.Property<int?>("DataSetId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -404,9 +404,7 @@ namespace CRISPR.Data.Migrations
                 {
                     b.HasOne("CRISPR.Models.DataSet", "DataSet")
                         .WithMany("Props")
-                        .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ModelId");
 
                     b.Navigation("DataSet");
                 });
@@ -415,9 +413,7 @@ namespace CRISPR.Data.Migrations
                 {
                     b.HasOne("CRISPR.Models.DataSet", "DataSet")
                         .WithMany("Tags")
-                        .HasForeignKey("DataSetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DataSetId");
 
                     b.Navigation("DataSet");
                 });

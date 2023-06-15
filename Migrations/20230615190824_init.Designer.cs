@@ -4,16 +4,19 @@ using CRISPR.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CRISPR.Data.Migrations
+namespace CRISPR.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230615190824_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,11 +82,11 @@ namespace CRISPR.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubTilte")
+                    b.Property<string>("SubTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Tilte")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -110,6 +113,10 @@ namespace CRISPR.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Licenses")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -118,11 +125,11 @@ namespace CRISPR.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubTilte")
+                    b.Property<string>("SubTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Tilte")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -130,7 +137,7 @@ namespace CRISPR.Data.Migrations
 
                     b.HasIndex("DataSetId");
 
-                    b.ToTable("Code", (string)null);
+                    b.ToTable("Model", (string)null);
                 });
 
             modelBuilder.Entity("CRISPR.Models.Prop", b =>

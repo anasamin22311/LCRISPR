@@ -208,6 +208,28 @@ body {
     opacity: 1;
     transform: translateY(0);
 }
+.details-section {
+    position: relative;
+}
+
+.download-icon {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 24px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    z-index: 100;
+    text-decoration: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.2s;
+}
+
+    .download-icon:hover {
+        background-color: #0069d9;
+    }
 /* Add this CSS keyframes for the shake animation */
 /*@keyframes shake {
     0% {

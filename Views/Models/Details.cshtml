@@ -11,16 +11,16 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Tilte)
+            @Html.DisplayNameFor(model => model.Title)
         </dt>
         <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.Tilte)
+            @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.SubTilte)
+            @Html.DisplayNameFor(model => model.SubTitle)
         </dt>
         <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.SubTilte)
+            @Html.DisplayFor(model => model.SubTitle)
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Description)
@@ -47,6 +47,9 @@
             @Html.DisplayFor(model => model.Accuracy)
         </dd>
     </dl>
+    <a href="@Model.FileURL" download class="download-icon">
+        <i class="fas fa-download"></i>
+    </a>
     <div class="button-container">
         <a asp-action="Edit" asp-route-id="@Model?.id" class="btn btn-primary edit-link">Edit</a>
         <a asp-action="Index" class="btn btn-secondary back-link">Back to List</a>

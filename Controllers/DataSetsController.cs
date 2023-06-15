@@ -56,7 +56,7 @@ namespace CRISPR.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Tilte,SubTilte,Description,RepositoryURL,Licenses,FileType,FileSize,FileURL,Accuracy")] DataSet dataSet)
+        public async Task<IActionResult> Create([Bind("Title,SubTitle,Description,RepositoryURL,Licenses,FileType,FileSize,FileURL,Accuracy")] DataSet dataSet)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace CRISPR.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Tilte,SubTilte,Description,RepositoryURL,Licenses,FileType,FileSize,FileURL,Accuracy")] DataSet dataSet)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Title,SubTitle,Description,RepositoryURL,Licenses,FileType,FileSize,FileURL,Accuracy")] DataSet dataSet)
         {
             if (id != dataSet.id)
             {

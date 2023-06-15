@@ -19,7 +19,7 @@ namespace CRISPR.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Model>().ToTable("Code");
+            modelBuilder.Entity<Model>().ToTable("Model");
             modelBuilder.Entity<Comment>().ToTable("Comment");
             modelBuilder.Entity<DataSet>().ToTable("DataSet");
             modelBuilder.Entity<Prop>().ToTable("Prop");

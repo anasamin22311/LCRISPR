@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CRISPR.Data.Migrations
+namespace CRISPR.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230606090853_init")]
-    partial class init
+    [Migration("20230615191501_init2")]
+    partial class init2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,47 +24,6 @@ namespace CRISPR.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CRISPR.Models.Code", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<float>("Accuracy")
-                        .HasColumnType("real");
-
-                    b.Property<int?>("DataSetId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Licenses")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RepositoryURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubTilte")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tilte")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("DataSetId");
-
-                    b.ToTable("Code", (string)null);
-                });
 
             modelBuilder.Entity("CRISPR.Models.Comment", b =>
                 {
@@ -123,17 +82,61 @@ namespace CRISPR.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubTilte")
+                    b.Property<string>("SubTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Tilte")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
                     b.ToTable("DataSet", (string)null);
+                });
+
+            modelBuilder.Entity("CRISPR.Models.Model", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<float>("Accuracy")
+                        .HasColumnType("real");
+
+                    b.Property<int?>("DataSetId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Licenses")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RepositoryURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("DataSetId");
+
+                    b.ToTable("Model", (string)null);
                 });
 
             modelBuilder.Entity("CRISPR.Models.Prop", b =>
@@ -386,17 +389,17 @@ namespace CRISPR.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CRISPR.Models.Code", b =>
-                {
-                    b.HasOne("CRISPR.Models.DataSet", null)
-                        .WithMany("Codes")
-                        .HasForeignKey("DataSetId");
-                });
-
             modelBuilder.Entity("CRISPR.Models.Comment", b =>
                 {
                     b.HasOne("CRISPR.Models.DataSet", null)
                         .WithMany("Comments")
+                        .HasForeignKey("DataSetId");
+                });
+
+            modelBuilder.Entity("CRISPR.Models.Model", b =>
+                {
+                    b.HasOne("CRISPR.Models.DataSet", null)
+                        .WithMany("Models")
                         .HasForeignKey("DataSetId");
                 });
 
@@ -475,9 +478,9 @@ namespace CRISPR.Data.Migrations
 
             modelBuilder.Entity("CRISPR.Models.DataSet", b =>
                 {
-                    b.Navigation("Codes");
-
                     b.Navigation("Comments");
+
+                    b.Navigation("Models");
 
                     b.Navigation("Props");
 

@@ -1,22 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CRISPR.Data;
 using CRISPR.Models;
+using iText.Kernel.Pdf;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.Layout;
+using iText.IO.Font.Constants;
+using iText.IO.Image;
+using iText.Kernel.Colors;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
 
 namespace CRISPR.Controllers
 {
     public class ModelsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ModelsController> _logger;
 
-        public ModelsController(ApplicationDbContext context)
+        public ModelsController(ApplicationDbContext context, ILogger<ModelsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Models
@@ -41,6 +47,7 @@ namespace CRISPR.Controllers
             {
                 return NotFound();
             }
+            model.FileURL = GeneratePdfFile(model);
 
             return View(model);
         }
@@ -56,12 +63,15 @@ namespace CRISPR.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Tilte,SubTilte,Description,RepositoryURL,Licenses,Accuracy")] Model model)
+        public async Task<IActionResult> Create(Model model)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(model);
+                _logger.LogInformation("Model ID before saving: {ModelId}", model.id);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Model ID after saving: {ModelId}", model.id);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -88,7 +98,7 @@ namespace CRISPR.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Tilte,SubTilte,Description,RepositoryURL,Licenses,Accuracy")] Model model)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Title,SubTitle,Description,RepositoryURL,Licenses,Accuracy")] Model model)
         {
             if (id != model.id)
             {
@@ -159,5 +169,102 @@ namespace CRISPR.Controllers
         {
           return (_context.Models?.Any(e => e.id == id)).GetValueOrDefault();
         }
+        private string GeneratePdfFile(Model model)
+        {
+            string folderPath = "wwwroot/pdfs/";
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            string fileName = $"Model_{model.id}.pdf";
+            string filePath = System.IO.Path.Combine(folderPath, fileName);
+
+            using (var writer = new PdfWriter(filePath))
+            {
+                using (var pdf = new PdfDocument(writer))
+                {
+                    var document = new Document(pdf);
+                    var pageSize = PageSize.A4;
+
+                    // Set up fonts, colors, and images
+                    var titleFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+                    var subTitleFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+                    var textFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                    var titleColor = new DeviceRgb(30, 144, 255); // Dodger Blue
+                    var subtitleColor = new DeviceRgb(70, 130, 180); // Steel Blue
+                    var headerImage = new Image(ImageDataFactory.Create("https://via.placeholder.com/150")); // Replace the URL with the desired image
+
+                    // Add header image
+                    headerImage.ScaleToFit(pageSize.GetWidth() - 100, 100);
+                    headerImage.SetHorizontalAlignment(HorizontalAlignment.CENTER);
+                    headerImage.SetMarginTop(30);
+                    headerImage.SetMarginBottom(30);
+                    document.Add(headerImage);
+
+                    // Add title
+                    var title = new Paragraph(model.Title)
+                        .SetFont(titleFont)
+                        .SetFontSize(24)
+                        .SetFontColor(titleColor)
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetMarginBottom(10);
+                    document.Add(title);
+
+                    // Add subtitle
+                    var subTitle = new Paragraph(model.SubTitle)
+                        .SetFont(subTitleFont)
+                        .SetFontSize(18)
+                        .SetFontColor(subtitleColor)
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetMarginBottom(20);
+                    document.Add(subTitle);
+
+                    // Add description
+                    var description = new Paragraph(model.Description)
+                        .SetFont(textFont)
+                        .SetFontSize(12)
+                        .SetTextAlignment(TextAlignment.JUSTIFIED)
+                        .SetMarginBottom(20);
+                    document.Add(description);
+
+                    // Add repository URL
+                    var repositoryUrl = new Paragraph($"Repository URL: {model.RepositoryURL}")
+                        .SetFont(textFont)
+                        .SetFontSize(12)
+                        .SetMarginBottom(10);
+                    document.Add(repositoryUrl);
+
+                    // Add licenses
+                    var licenses = new Paragraph($"Licenses: {model.Licenses}")
+                        .SetFont(textFont)
+                        .SetFontSize(12)
+                        .SetMarginBottom(10);
+                    document.Add(licenses);
+
+                    // Add accuracy
+                    var accuracy = new Paragraph($"Accuracy: {model.Accuracy}")
+                        .SetFont(textFont)
+                        .SetFontSize(12)
+                        .SetMarginBottom(10);
+                    document.Add(accuracy);
+
+                    // Add footer
+                    var footer = new Paragraph("Generated by CRISPR")
+                        .SetFont(textFont)
+                        .SetFontSize(10)
+                        .SetTextAlignment(TextAlignment.RIGHT)
+                        .SetMarginTop(30)
+                        .SetMarginRight(30)
+                        .SetFixedPosition(pageSize.GetWidth() - 150, 30, 120);
+                    document.Add(footer);
+
+                    document.Close();
+                }
+            }
+
+            return filePath.Replace("wwwroot", "");
+        }
+
     }
 }
