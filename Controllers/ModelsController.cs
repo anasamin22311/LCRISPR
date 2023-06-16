@@ -11,6 +11,7 @@ using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
 
 namespace CRISPR.Controllers
 {
@@ -184,30 +185,30 @@ namespace CRISPR.Controllers
             {
                 using (var pdf = new PdfDocument(writer))
                 {
-                    var document = new Document(pdf);
+                    var document = new Document(pdf, PageSize.A4);
                     var pageSize = PageSize.A4;
 
-                    // Set up fonts, colors, and images
+                    // Set up fonts, colors, and background
                     var titleFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
                     var subTitleFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
                     var textFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
                     var titleColor = new DeviceRgb(30, 144, 255); // Dodger Blue
                     var subtitleColor = new DeviceRgb(70, 130, 180); // Steel Blue
-                    var headerImage = new Image(ImageDataFactory.Create("https://via.placeholder.com/150")); // Replace the URL with the desired image
+                    var backgroundColor = new DeviceRgb(240, 248, 255); // Alice Blue
 
-                    // Add header image
-                    headerImage.ScaleToFit(pageSize.GetWidth() - 100, 100);
-                    headerImage.SetHorizontalAlignment(HorizontalAlignment.CENTER);
-                    headerImage.SetMarginTop(30);
-                    headerImage.SetMarginBottom(30);
-                    document.Add(headerImage);
-
+                    // Add background color
+                    var background = new Rectangle(0, 0, pageSize.GetWidth(), pageSize.GetHeight());
+                    var pdfPage = pdf.AddNewPage();
+                    var pdfCanvas = new PdfCanvas(pdfPage);
+                    pdfCanvas.SetFillColor(backgroundColor).Rectangle(background).Fill();
+                    var backgroundCanvas = new Canvas(pdfPage, pdfPage.GetMediaBox());
                     // Add title
                     var title = new Paragraph(model.Title)
                         .SetFont(titleFont)
                         .SetFontSize(24)
                         .SetFontColor(titleColor)
                         .SetTextAlignment(TextAlignment.CENTER)
+                        .SetMarginTop(50)
                         .SetMarginBottom(10);
                     document.Add(title);
 
