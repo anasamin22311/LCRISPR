@@ -120,10 +120,14 @@ namespace CRISPR.Areas.Identity.Pages.Account
                 {
                     var claims = new List<Claim>() { new("username", user.UserName), new("email", user.Email) };
                     var userClaims= await _userManager.GetClaimsAsync(user);
-                    claims.Where(n => !userClaims.Any(e => e.Type == n.Type && e.Value == n.Value)).ToList().ForEach(async x => await _userManager.AddClaimAsync(user, x));
-                    await _signInManager.RefreshSignInAsync(user);
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+
+                    var claimsResult = await _userManager.AddClaimsAsync(user, claims.Where(n => !userClaims.Any(e => e.Type == n.Type && e.Value == n.Value)));
+                    if (claimsResult.Succeeded)
+                    {
+                        await _signInManager.RefreshSignInAsync(user);
+                        _logger.LogInformation("User logged in.");
+                        return LocalRedirect(returnUrl);
+                    }
                 }
                 if (result.RequiresTwoFactor)
                 {
