@@ -17,7 +17,7 @@
             <div class="card-content">
                 <div title="@item.Title" class="card-title">@Html.DisplayFor(modelItem => item.Title)</div>
                 <span title="@item.SubTitle" class="card-subtitle">@Html.DisplayFor(modelItem => item.SubTitle)</span>
-                <span title="@item.Description" class="card-description">@Html.DisplayFor(modelItem => item.Description)</span>
+                @*<span title="@item.Description" class="card-description">@Html.DisplayFor(modelItem => item.Description)</span>*@
             </div>
         </a>
         <div class="card-bottom">
@@ -28,8 +28,8 @@
             <a href="@item.RepositoryURL" class="card-link" target="_blank">Repository</a>
         </div>
         @*<div class="card-buttons">
-            <a asp-action="Edit" asp-route-id="@item.id" class="btn-edit btn btn-sm card-buttons-btn">Edit</a>
-            <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-sm card-buttons-btn">Delete</a>
-        </div>*@
+    <a asp-action="Edit" asp-route-id="@item.id" class="btn-edit btn btn-sm card-buttons-btn">Edit</a>
+    <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-sm card-buttons-btn">Delete</a>
+    </div>*@
     </div>
 }

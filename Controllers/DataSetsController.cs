@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CRISPR.Data;
 using CRISPR.Models;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.Layout;
 
 namespace CRISPR.Controllers
 {
@@ -158,6 +163,99 @@ namespace CRISPR.Controllers
         private bool DataSetExists(int id)
         {
           return (_context.DataSets?.Any(e => e.id == id)).GetValueOrDefault();
+        }
+
+        // DownloadDataSet Action
+        // DownloadDataSet Action
+        [HttpGet]
+        public async Task<IActionResult> DownloadDataSet(int? id)
+        {
+            if (id == null || _context.DataSets == null)
+            {
+                return NotFound();
+            }
+
+            var dataSet = await _context.DataSets
+                .FirstOrDefaultAsync(m => m.id == id);
+            if (dataSet == null)
+            {
+                return NotFound();
+            }
+
+            // Generate the PDF file
+            dataSet.FileURL = GeneratePdfFile(dataSet);
+
+            // Set up the file download
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(dataSet.FileURL, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            string fileName = $"DataSet_{dataSet.id}.pdf";
+            return File(memory, "application/pdf", fileName);
+        }
+
+        private string GeneratePdfFile(DataSet dataSet)
+        {
+            string folderPath = "wwwroot/pdfs/";
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            string fileName = $"DataSet_{dataSet.id}.pdf";
+            string filepath = System.IO.Path.Combine(folderPath, fileName);
+
+            using (FileStream stream = new FileStream(filepath, FileMode.Create))
+            {
+                PdfWriter writer = new PdfWriter(stream);
+                PdfDocument pdfDocument = new PdfDocument(writer);
+                PageSize pageSize = PageSize.A4;
+                Document document = new Document(pdfDocument, pageSize);
+
+                // Add title
+                Paragraph title = new Paragraph(dataSet.Title)
+                    .SetFontSize(24)
+                    .SetBold()
+                    .SetTextAlignment(TextAlignment.CENTER);
+                document.Add(title);
+
+                // Add subtitle
+                Paragraph subtitle = new Paragraph(dataSet.SubTitle)
+                    .SetFontSize(18)
+                    .SetItalic()
+                    .SetTextAlignment(TextAlignment.CENTER);
+                document.Add(subtitle);
+
+                // Add description
+                Paragraph description = new Paragraph(dataSet.Description)
+                    .SetFontSize(14)
+                    .SetTextAlignment(TextAlignment.JUSTIFIED);
+                document.Add(description);
+
+                // Add repository URL
+                Paragraph repositoryURL = new Paragraph("Repository URL: " + dataSet.RepositoryURL)
+                    .SetFontSize(12)
+                    .SetTextAlignment(TextAlignment.LEFT);
+                document.Add(repositoryURL);
+
+                // Add licenses
+                Paragraph licenses = new Paragraph("Licenses: " + dataSet.Licenses)
+                    .SetFontSize(12)
+                    .SetTextAlignment(TextAlignment.LEFT);
+                document.Add(licenses);
+
+                // Add accuracy
+                Paragraph accuracy = new Paragraph("Accuracy: " + dataSet.Accuracy.ToString())
+                    .SetFontSize(12)
+                    .SetTextAlignment(TextAlignment.LEFT);
+                document.Add(accuracy);
+
+                // Close the document
+                document.Close();
+            }
+
+            return filepath;
         }
     }
 }

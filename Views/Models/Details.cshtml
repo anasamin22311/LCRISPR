@@ -25,14 +25,23 @@
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.Description)
+        <dd class="col-sm-7 description-container">
+            <div class="description-wrapper">
+                <!-- Added -->
+                <div class="description-trigger">
+                    Hover for description
+                </div>
+                <div class="description-popup">
+                    @Html.DisplayFor(model => model.Description)
+                </div>
+            </div>
+            <div class="description-background"></div> <!-- Added -->
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.RepositoryURL)
         </dt>
         <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.RepositoryURL)
+            <a href="@Model.RepositoryURL" class="repository-url">@Model.RepositoryURL</a>
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Licenses)
@@ -47,12 +56,14 @@
             @Html.DisplayFor(model => model.Accuracy)
         </dd>
     </dl>
-    <a href="@Model.FileURL" download class="download-icon">
+    <a asp-action="DownloadModel" asp-route-id="@Model.id" class="download-icon">
         <i class="fas fa-download"></i>
     </a>
+    
     <div class="button-container">
         <a asp-action="Edit" asp-route-id="@Model?.id" class="btn btn-primary edit-link">Edit</a>
         <a asp-action="Index" class="btn btn-secondary back-link">Back to List</a>
-        <a asp-action="Delete" class="btn btn-danger back-link">Delete</a>
+        <a asp-action="Delete" asp-route-id="@Model.id" class="btn btn-danger ">Delete</a>
+
     </div>
 </div>

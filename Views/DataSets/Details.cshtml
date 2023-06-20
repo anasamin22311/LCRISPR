@@ -7,7 +7,7 @@
 <h1 class="details-header">Details</h1>
 
 <div class="details-section">
-    <h4>DataSet</h4>
+    <h4>Model</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-3">
@@ -25,47 +25,27 @@
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.Description)
+        <dd class="col-sm-7 description-container">
+            <div class="description-wrapper">
+                <div class="description-trigger">
+                    Hover for description
+                </div>
+                <div class="description-popup">
+                    @Html.DisplayFor(model => model.Description)
+                </div>
+            </div>
+            <div class="description-background"></div>
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.RepositoryURL)
         </dt>
         <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.RepositoryURL)
+            <a href="@Model.RepositoryURL" class="repository-url">@Model.RepositoryURL</a>
         </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Licenses)
-        </dt>
-        <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.Licenses)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.FileType)
-        </dt>
-        <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.FileType)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.FileSize)
-        </dt>
-        <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.FileSize)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.FileURL)
-        </dt>
-        <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.FileURL)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Accuracy)
-        </dt>
-        <dd class="col-sm-7">
-            @Html.DisplayFor(model => model.Accuracy)
-        </dd>
+        <!-- Rest of the DataSet fields -->
+        ...
     </dl>
-    <a href="@Model.FileURL" download class="download-icon">
+    <a asp-action="DownloadDataSet" asp-route-id="@Model.id" class="download-icon">
         <i class="fas fa-download"></i>
     </a>
     <div class="button-container">

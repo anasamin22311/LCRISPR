@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<CRISPR.Models.DataSet>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Datasets";
 }
 
-<h1 style="text-align:center">Index</h1>
+<h1 style="text-align:center">Datasets</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
@@ -17,19 +17,30 @@
             <div class="card-content">
                 <div title="@item.Title" class="card-title">@Html.DisplayFor(modelItem => item.Title)</div>
                 <span title="@item.SubTitle" class="card-subtitle">@Html.DisplayFor(modelItem => item.SubTitle)</span>
-                <span title="@item.Description" class="card-description">@Html.DisplayFor(modelItem => item.Description)</span>
+                @*<span title="@item.Description" class="card-description">@Html.DisplayFor(modelItem => item.Description)</span>*@
             </div>
         </a>
         <div class="card-bottom">
             <div class="card-info">
                 <span class="card-license">@Html.DisplayFor(modelItem => item.Licenses)</span>
+                @*<span class="card-size">Size: @Html.DisplayFor(modelItem => item.FileSize)</span>*@
                 <span class="card-accuracy">Accuracy: @Html.DisplayFor(modelItem => item.Accuracy)</span>
+
             </div>
             <a href="@item.RepositoryURL" class="card-link" target="_blank">Repository</a>
         </div>
-       @* <div class="card-buttons">
-            <a asp-action="Edit" asp-route-id="@item.id" class="btn-edit btn btn-sm card-buttons-btn">Edit</a>
-            <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-sm card-buttons-btn">Delete</a>
-        </div>*@
+        @*<div class="card-buttons">
+    <a asp-action="Edit" asp-route-id="@item.id" class="btn-edit btn btn-sm card-buttons-btn">Edit</a>
+    <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-sm card-buttons-btn">Delete</a>
+    </div>*@
     </div>
 }
+<style>
+    .card-subtitle {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
