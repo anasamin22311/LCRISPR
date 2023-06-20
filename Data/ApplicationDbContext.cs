@@ -15,6 +15,8 @@ namespace CRISPR.Data
         public DbSet<DataSet> DataSets { get; set; }
         public DbSet<Prop> Props { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet <DNASequence> DNASequences { get; set; }
+        public DbSet<CrisprOutViewModel> CrisprOutViewModels { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -23,7 +25,10 @@ namespace CRISPR.Data
             modelBuilder.Entity<Comment>().ToTable("Comment");
             modelBuilder.Entity<DataSet>().ToTable("DataSet");
             modelBuilder.Entity<Prop>().ToTable("Prop");
-            modelBuilder.Entity<Tag>().ToTable("Tag"); // Add this line
+            modelBuilder.Entity<Tag>().ToTable("Tag");
+            modelBuilder.Entity<DNASequence>().ToTable("DNASequence");
+            modelBuilder.Entity<CrisprOutViewModel>().HasNoKey();
+            modelBuilder.Entity<DNASequence>().HasNoKey();
 
             modelBuilder.Entity<DataSet>()
                 .HasMany(ds => ds.Comments)

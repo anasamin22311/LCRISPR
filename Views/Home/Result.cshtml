@@ -1,0 +1,15 @@
+﻿@model CrisprOutViewModel
+@{
+    ViewData["Title"] = "CRISPR Output";
+}
+
+else
+{
+    <h2>@ViewData["Title"]</h2>
+
+    <p><strong>Name:</strong> @Model.Name</p>
+    <p><strong>Details:</strong> @Model.Details</p>
+    <p><strong>Sequence:</strong> @Model.Sequence</p>
+    <p><strong>Location:</strong> @Model.Location</p>
+    <p><strong>gRNA:</strong> @Model.GRNA</p>
+}

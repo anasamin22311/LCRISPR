@@ -13,11 +13,11 @@
     </div>
     <br />
     <div class="form-group">
-        <label asp-for="FileName">Or upload a CSV or FASTA file:</label>
+        <label asp-for="File">Or upload a CSV or FASTA file:</label>
         <div class="custom-file">
-            <input asp-for="FileName" type="file" accept=".csv,.fasta" class="custom-file-input" id="customFile">
+            <input asp-for="File" type="file" accept=".csv,.fasta" class="custom-file-input" id="customFile">
             <label class="custom-file-label" for="customFile">Choose file</label>
-            <span asp-validation-for="FileName" class="text-danger"></span>
+            <span asp-validation-for="File" class="text-danger"></span>
         </div>
     </div>
     <br />
