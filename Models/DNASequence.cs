@@ -6,7 +6,7 @@ namespace CRISPR.Models
 {
     public class DNASequence
     {
-        [Required(ErrorMessage = "Either paste a DNA sequence or upload a file.")]
+        //[Required(ErrorMessage = "Either paste a DNA sequence or upload a file.")]
         public string? Sequence { get; set; }
 
         public string? FileName { get; set; }

@@ -24,6 +24,15 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="ML-Model\content\user\input\align\" />
+    <Folder Include="ML-Model\content\user\input\crispr\" />
+    <Folder Include="ML-Model\content\user\input\fasta\" />
+    <Folder Include="ML-Model\content\user\input\predict\" />
+    <Folder Include="ML-Model\content\user\output\align\" />
+    <Folder Include="ML-Model\content\user\output\crispr\" />
+    <Folder Include="ML-Model\content\user\output\fasta\" />
+    <Folder Include="ML-Model\content\user\output\predict\" />
+    <Folder Include="ML-Model\content\user\results\" />
     <Folder Include="wwwroot\UploadedFiles\" />
     <Folder Include="wwwroot\pdfs\" />
   </ItemGroup>

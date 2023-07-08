@@ -7,6 +7,12 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Text;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using Org.BouncyCastle.Asn1;
 
 namespace CRISPR.Controllers
 {
@@ -48,8 +54,12 @@ namespace CRISPR.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadSequence(DNASequence model)
         {
-            // Check if either a file or a sequence is provided, but not both
-            if ((model.File != null && !string.IsNullOrEmpty(model.Sequence)) || (model.File == null && string.IsNullOrEmpty(model.Sequence)))
+            List<Models.Results> results = new();
+
+            HttpClient client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(5000);
+
+            if (model.File == null && string.IsNullOrEmpty(model.Sequence))
             {
                 ModelState.AddModelError("", "Please either paste a DNA sequence or upload a file, but not both.");
                 return View(model);
@@ -57,39 +67,64 @@ namespace CRISPR.Controllers
 
             if (model.File != null)
             {
-                using (var reader = new StreamReader(model.File.OpenReadStream()))
+                MultipartFormDataContent content = new MultipartFormDataContent();
+                using (Stream stream = model.File.OpenReadStream())
                 {
-                    model.Sequence = await reader.ReadToEndAsync();
+                    StreamContent stream_content = new StreamContent(stream);
+                    content.Add(stream_content, "file", model.File.FileName);
+                    HttpResponseMessage response = await client.PostAsync("http://localhost:5000/fasta", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonResults = await response.Content.ReadAsStringAsync();
+                        if (jsonResults != null)
+                        {
+                            results = JsonConvert.DeserializeObject<List<Models.Results>>(jsonResults);
+                            if (results != null)
+                            {
+                                var jsonString = JsonConvert.SerializeObject(results);
+                                return Json(jsonString);
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Something wrong happend sorry.");
+                        return View(model);
+                    }
                 }
-                model.FileName = model.File.FileName;
             }
             else
             {
-                model.FileName = "sequence.txt";
+                var query = new { name = "Query", sequence = model.Sequence };
+                string json = JsonConvert.SerializeObject(query);
+                StringContent string_content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync("http://localhost:5000/dna", string_content);
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonResults = await response.Content.ReadAsStringAsync();
+                    if (jsonResults != null)
+                    {
+                        results = JsonConvert.DeserializeObject<List<Models.Results>>(jsonResults);
+                        if (results != null)
+                        {
+                            var jsonString = JsonConvert.SerializeObject(results);
+                            return Json(jsonString);
+
+                        }
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Something wrong happend sorry.");
+                    return View(model);
+                }
             }
-
-            // Save the uploaded file or text to a directory
-            string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles");
-            Directory.CreateDirectory(rootPath);
-            string filePath = Path.Combine(rootPath, model.FileName);
-            await System.IO.File.WriteAllTextAsync(filePath, model.Sequence);
-
-            //Output
-            string CrisprOut = "XR_001828562.2,PREDICTED: Cebus imitator cellular tumor antigen p53-like,...";
-            var crisList = CrisprOut.Split(",");
-
-            CrisprOutViewModel crisprOutViewModel = new CrisprOutViewModel
-            {
-                Name = crisList[0],
-                Details = crisList[1],
-                Sequence = crisList[2],
-                Location = crisList[3],
-                GRNA = crisList[4]
-            };
-            // Send the file to the external API
-            //await SendFileToExternalApi(filePath);
-
-            return View("Result", crisprOutViewModel);
+            //string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles");
+            //Directory.CreateDirectory(rootPath);
+            //string filePath = Path.Combine(rootPath, model.FileName);
+            //await System.IO.File.WriteAllTextAsync(filePath, model.Sequence);
+            return View("Result", results);
         }
 
         //private async Task SendFileToExternalApi(string filePath)
