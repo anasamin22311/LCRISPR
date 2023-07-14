@@ -1,7 +1,7 @@
 import os
 import re
 import uuid
-import Final
+import Prepare
 from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 
@@ -65,7 +65,6 @@ def fasta():
     file = request.files['file']
     valid, result = validate_fasta(file)
     if valid:
-        remove_files(fasta_input)
         filename = str(uuid.uuid4())
         if file.filename:
             filename = secure_filename(file.filename)
@@ -74,7 +73,7 @@ def fasta():
         file.seek(0)
         file.save(path)
         try:
-            Final.execute(select_genes=[])
+            Final.execute(select_genes=['tp53'])
             return send_file(results)
         except:
             remove_files(path)
@@ -97,13 +96,16 @@ def dna():
     if valid:
         path = os.path.join(fasta_input, f'{str(uuid.uuid4())} - {name}.fasta')
         try:
-            remove_files(fasta_input)
             Final.write_fasta_file(name, sequence, 'Reference', output=path)
-            Final.execute(select_genes=[])
+            Final.execute(select_genes=['tp53'])
             return send_file(results)
         except:
             remove_files(path)
     return jsonify({"error": result}), 400
 
 if __name__ == '__main__':
+    first_run = input("First run? (Y/any): ")
+    if first_run.lower() == 'y':
+        Prepare.prepare_env()
+    import Final
     app.run(port=5000)

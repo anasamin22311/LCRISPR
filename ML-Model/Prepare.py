@@ -3,7 +3,6 @@ import os
 # import glob
 import shutil
 import pickle
-import requests
 import argparse
 import subprocess
 from zipfile import ZipFile
@@ -90,6 +89,8 @@ def run_binary(binary_path, args):
     subprocess.run([binary_path] + args)
 
 def pip_install():
+    run_binary('pip', ['install', 'requests'])
+    import requests
     run_binary('pip', ['install', 'gdown'])
     run_binary('pip', ['install', 'pandas'])
     run_binary('pip', ['install', 'numpy'])
@@ -113,13 +114,28 @@ def download_and_unzip(url, name, destination):
             f.write(chunk)
     unzip_file(os.path.join(destination, name), destination)
 
+def get_dataset(destination=dataset):
+    check_dataset = input('Download the dataset (you can skip it and download the model directly)? (y/n) ')
+    if check_dataset.lower() == 'y':
+        drive_download('1wrx0CskTnatLS3PDZhdfb8WzwLRPiXup', 'dataset.csv', destination)
+    return check_dataset
+
+def get_model(destination=model):
+    check_model = input('Download the model? (y/n) ')
+    if check_model.lower() == 'y':
+        drive_download('1-clGIJZlTxOv6sa0SFFQF6-LNI3jcQKw', 'model.pkl', destination)
+    return check_model
+
 def prepare_env(install_pip='y'):
     install_packages = input('Do you want to install the required packages? (y/n) ')
     if str(install_pip).lower() == 'y' or install_packages.lower() == 'y':
         pip_install()
     create_folder(folders_list)
+    get_dataset()
+    get_model()
     drive_download('1dHCjsggAjkzkJRMvSt2omRKWnAa5bRWs', 'genes.json', genes)
-    drive_download('1DWtSNyjrjzK6RdWMjlmnNlQwwOkEv-nI', 'Alignment.exe', align)
+    drive_download('1Q4U5XtF01ECecfRWHaFxrwRdITL7w9qE', 'Aligner.py', align)
+    drive_download('1jfPJWNCVWLlRR8405WfjTxM-UFcdMg3h', 'muscle.exe', align)
     drive_download('1fiPncYHi5DykH286nIUlOjGfUXpbDQTf', 'sgRNAScorer.2.0.zip', crispr)
     unzip_file(os.path.join(crispr, 'sgRNAScorer.2.0.zip'), crispr)
 

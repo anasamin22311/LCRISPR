@@ -460,13 +460,6 @@ def klsny(select_user=[], select_genes=[], final_result=os.path.join(results, 'o
 
 def execute(select_user=[], select_genes=[], spacer_length=21, pam_orientation=3, pam_sequence='NGG'):
     remove_files(results)
-    remove_files(align_input)
-    remove_files(predict_input)
-    remove_files(crispr_input)
-    remove_files(fasta_output)
-    remove_files(align_output)
-    remove_files(predict_output)
-    remove_files(crispr_output)
     final_prepare()
     Alignment_df = None
     user_query, query_exists = user_input()
